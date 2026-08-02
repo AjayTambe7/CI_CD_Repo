@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - main
+      - feature_branch
 
 name: Aikido Scan
 jobs:
@@ -15,4 +15,4 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }} 
           path: my-repo 
       - name: Run scan
-        run: aikido-local-scanner scan my-repo --apikey ${{ secrets.AIKIDO_API_KEY }} --repositoryname CI_CD_Repo --branchname main
+        run: aikido-local-scanner scan my-repo --apikey ${{ secrets.AIKIDO_API_KEY }} --repositoryname CI_CD_Repo --branchname feature_branch
