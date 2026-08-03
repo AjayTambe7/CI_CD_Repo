@@ -1,7 +1,8 @@
 on:
-  push:
+  pull_request:
     branches:
-      - second_branch
+      - main
+
 name: Aikido Scan
 jobs:
   aikido-local-scan-repo:
@@ -12,6 +13,7 @@ jobs:
       - uses: actions/checkout@v4 
         with: 
           token: ${{ secrets.GITHUB_TOKEN }} 
-          path: my-repo 
+          path: ${{ github.event.repository.name }}
+          fetch-depth: 0 # Makes sure base and head commit are accessible in workflow
       - name: Run scan
-        run: aikido-local-scanner scan my-repo --apikey ${{ secrets.AIKIDO_API_KEY }} --repositoryname CI_CD_Repo --branchname second_branch --force-create-repository-for-branch
+        run: aikido-local-scanner scan ${{ github.event.repository.name }} --apikey ${{ secrets.AIKIDO_API_KEY }} --repositoryname ${{ github.event.repository.name }} --branchname ${{ github.event.pull_request.head.ref }} --gating-mode pr --fail-on critical --base-commit-id ${{ github.event.pull_request.base.sha }} --head-commit-id ${{ github.event.pull_request.head.sha }}
